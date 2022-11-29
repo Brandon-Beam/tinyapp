@@ -12,6 +12,7 @@ const generateRandomString = () => {
   return Math.random().toString(36).substring(2, 8);
 }
 
+
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/urls", (req, res) => {
@@ -40,9 +41,17 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id]
+  res.redirect(longURL);
+});
+
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  console.log(req.body);
+  const newstring = generateRandomString()
+  urlDatabase[newstring] = req.body.longURL
+  console.log(urlDatabase) // Log the POST request body to the console
+  res.redirect(302, `/urls/${newstring}`)
 });
 
 app.listen(PORT, () => {
