@@ -21,6 +21,14 @@
         Short URL ID: <a href="/u/<%= id %>">
           <%= id %>
         </a>
+      <form class="form-inline" action="/urls/<%= id %>" method="POST">
+        <div class="form-group mb-2">
+          <label for="longURL">Enter a differentURL:</label>
+          <input class="form-control" type="text" name="longURL" placeholder="http://"
+            style="width: 300px; margin: 1em" />
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
       </p>
     </div>
     <div class="card-footer text-muted"></div>

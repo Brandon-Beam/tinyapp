@@ -37,9 +37,6 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
 
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id]
@@ -50,14 +47,18 @@ app.post("/urls", (req, res) => {
   console.log(req.body);
   const newstring = generateRandomString()
   urlDatabase[newstring] = req.body.longURL
-  console.log(urlDatabase) // Log the POST request body to the console
+  console.log(urlDatabase)
   res.redirect(302, `/urls/${newstring}`)
 });
 
 app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id]
   res.redirect("/urls")
+});
 
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] = req.body.longURL
+  res.redirect("/urls")
 })
 
 app.listen(PORT, () => {
