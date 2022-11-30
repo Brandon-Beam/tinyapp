@@ -18,14 +18,20 @@
         </div>
         <div class="nav-item">
 
-          <form class="form-inline" action="/login" method="POST">
+          <% if(username) {%>
             <label class="navbar-brand">
               <%= username%>
             </label>
-            <input class="form-control" type="text" name="login" placeholder="login"
-              style="width: 100px; margin: 1em" />
-            <button type="submit" class="btn btn-info">Submit</button>
-          </form>
+            <form action="/logout" method="POST">
+              <button type="submit">logout</button>
+            </form>
+            <% } else {%>
+              <form class="form-inline" action="/login" method="POST">
+                <input class="form-control" type="text" name="login" placeholder="login"
+                  style="width: 100px; margin: 1em" />
+                <button type="submit" class="btn btn-info">login</button>
+              </form>
+              <% } %>
 
         </div>
 
