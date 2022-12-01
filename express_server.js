@@ -71,6 +71,13 @@ app.get("/registration", (req, res) => {
   res.render("registration", templateVars);
 });
 
+app.get("/login", (req, res) => {
+  const user_id = req.cookies.user_id;
+  const username = users[user_id]
+  const templateVars = { username }
+  res.render("login", templateVars);
+});
+
 app.post("/urls", (req, res) => {
   console.log(req.body);
   const newstring = generateRandomString()
@@ -90,13 +97,19 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.login);
-  res.redirect("/urls")
+  const email = req.body.email;
+  const password = req.body.password;
+  if (!emailFinder(email) || emailFinder(email).password !== password) {
+    res.sendStatus(403)
+  } else {
+    res.cookie("user_id", emailFinder(email).id);
+    res.redirect("/urls")
+  }
 });
 
 app.post("/logout", (req, res) => {
   res.clearCookie('user_id');
-  res.redirect("/urls")
+  res.redirect("/login")
 });
 
 app.post("/register", (req, res) => {
