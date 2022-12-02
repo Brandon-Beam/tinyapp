@@ -1,8 +1,9 @@
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser')
-const users = { fy7dh7: { id: 'fy7dh7', email: 'bbeam1@gmail.com', password: 's' } }
+const users = {}
 const urlDatabase = {
   "b2xVn2": {
     longURL: "http://www.lighthouselabs.ca", userId: 'fy7dh7'
@@ -38,11 +39,9 @@ app.get("/urls", (req, res) => {
       for (const item in urlDatabase) {
         if (urlDatabase[item].userId === user_id)
           personalURLS[item] = urlDatabase[item]
-        console.log(personalURLS)
       } return personalURLS
     }
     let urls = yourUrls(user_id)
-    console.log(urls)
     const templateVars = { username, urls };
     res.render("urls_index", templateVars);
   } else {
@@ -154,7 +153,7 @@ app.post("/urls/:id", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  if (!emailFinder(email) || emailFinder(email).password !== password) {
+  if (!emailFinder(email) || bcrypt.compareSync(emailFinder(email).password, password)) {
     res.sendStatus(403)
   } else {
     res.cookie("user_id", emailFinder(email).id);
@@ -169,7 +168,7 @@ app.post("/logout", (req, res) => {
 
 app.post("/register", (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
+  const password = bcrypt.hashSync(req.body.password);
   const id = generateRandomString();
   if (email === '' || password === '' || emailFinder(email) !== null) {
     res.sendStatus(400);
