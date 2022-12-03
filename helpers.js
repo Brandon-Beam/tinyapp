@@ -5,5 +5,5 @@ const emailFinder = (email, database) => {
     }
   } return null
 }
-
+//finds user object on email match
 module.exports = { emailFinder }
